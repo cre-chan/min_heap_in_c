@@ -1,0 +1,6 @@
+﻿  test.c
+d:\min_heap\heap_test\test.c(10): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
+d:\min_heap\heap_test\test.c(21): warning C4101: 'key': unreferenced local variable
+d:\min_heap\heap_test\test.c(20): warning C4101: 'rank': unreferenced local variable
+  heap_test.vcxproj -> D:\min_heap\Debug\heap_test.exe
+  heap_test.vcxproj -> D:\min_heap\Debug\heap_test.pdb (Partial PDB)

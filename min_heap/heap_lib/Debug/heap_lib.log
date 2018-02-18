@@ -1,0 +1,4 @@
+﻿  min_heap.c
+d:\min_heap\heap_lib\min_heap.c(98): warning C4033: 'extract_min' must return a value
+d:\min_heap\heap_lib\min_heap.c(140): warning C4715: 'extract_min': not all control paths return a value
+  heap_lib.vcxproj -> D:\min_heap\Debug\heap_lib.lib
