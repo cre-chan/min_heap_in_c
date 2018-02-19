@@ -1,6 +1,6 @@
 #pragma once
 /*
-2018/2/18 cre-chan at home, Hanghou, China
+2018/2/18 cre-chan at home, Hangzhou, China
 
 This is my first step on writing a whole set of libraries for data structures
 in C. There're probably many defects remained unseen and it will be of great
@@ -10,7 +10,8 @@ So, let me introduce the library for you. In the library lies our min_heap and
 his related functions:
 -------------********------------------------
 1.MIN_HEAP(
-     int(*compare)(comparable_ptr, comparable_ptr)
+     int(*compare)(comparable_ptr, comparable_ptr),
+	 void(*deconstruct)(comparable_ptr)
 )
 this function allocs memory for a min_heap and retrun a 
 pointer to it. The function requires a pointer to a function
@@ -42,7 +43,7 @@ this function decrease a key value in the heap and keep the property
 of binary heap. Rank is an interger starting from 1. And this rank
 makes random access. So I recommend that when U implementing graph
 or somthing, make an extra slot in your node to store this value so you
-can access this quickly.(Support on this subject will be included later)
+can access this quickly.(Support on this feature will be included later)
 This function is of O(lg n) time complexity as well.
 
 5.extract_min(
@@ -53,14 +54,22 @@ the heap. O(lg n) time complexity.
 -------------*******--------------------
 
 Also his properties:
-1.arr:  this property is an array of comparable pointer (actually void pointers). Any key in the heap
-is stored in this place as a binary tree.
+1.arr:  this property is an array of comparable pointer (actually void pointers).
+Any key in the heap is stored in this place as a binary tree.
 
 2.capacity:  this property is an interger represents the maximum amount of
-keys the heap can hold. It is always a power of 2.
+keys the heap can hold. It is always a power of 2. Updates automatically.
 
-3.length:  the number of keys a heap really holds.
+3.length:  the number of keys a heap really holds. Updates automatically.
 
+4.compare:  a function used to compare two elements in a heap. This property
+is aquired during initilization of a heap and should not be changed. The core
+part of a heap.
+
+5.deconstruct(optional): a function used to free elements from a heap. If this
+is left as NIL during initialization, memory leakage may occur when calling
+the del_MIN_HEAP function. If you don't want to destroy elements for some purpose,
+set the second arguments of MIN_HEAP as NULL is OK.
 --------------*******---------------------
 
 */
@@ -75,6 +84,7 @@ typedef struct {
 	int capacity;
 	int length;
 	int(*compare)(comparable_ptr,comparable_ptr);
+	void(*deconstruct)(comparable_ptr);
 }min_heap;
 
 #ifdef _cplusplus
@@ -85,15 +95,26 @@ extern "C" {
 	void display(min_heap*, int(*get)(comparable_ptr));
 #endif // DEBUG
 
+    //this function is used to view the whole heap while debugging
 	void display(min_heap*, int(*get)(comparable_ptr));
 
-	min_heap* MIN_HEAP(int(*compare)(comparable_ptr, comparable_ptr));
+	min_heap* MIN_HEAP(
+		int(*compare)(comparable_ptr, comparable_ptr),
+		void(*deconstruct)(comparable_ptr)
+	);
 
 	void del_MIN_HEAP(min_heap* heap);
 
-	void insert_heap(min_heap* heap, comparable_ptr key);
+	void min_heap_insert(
+		min_heap* heap, 
+		comparable_ptr key
+	);
 
-	void decrease_key(min_heap* heap, int rank,comparable_ptr key);
+	void decrease_key(
+		min_heap* heap, 
+		int rank,
+		comparable_ptr key
+	);
 
 	comparable_ptr extract_min(min_heap* heap);
 

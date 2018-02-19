@@ -22,44 +22,49 @@
 
 typedef int index;
 
-static void expand_heap(min_heap* heap) {
-	//alloc double a space as before
-	comparable_ptr* temp;
-	temp = NEW_COMPTR(heap->capacity*2);
-	//copy the memory into temp and delete the original heap
-	for (int i = 0; i < heap->length; i++)temp[i] = heap->arr[i];
-	free(VOID(heap->arr));
-	heap->arr = temp;
-	heap->capacity *= 2;
-}
-
-static void shrink_heap(min_heap* heap) {
-	comparable_ptr* temp;
-	temp = NEW_COMPTR(heap->capacity / 2);
-	//copy the memory into temp and delete the original heap
-	for (int i = 0; i < heap->length; i++)temp[i] = heap->arr[i];
-	free(VOID(heap->arr));
-	heap->arr = temp;
-	heap->capacity /= 2;
-}
+static void expand_heap(min_heap* heap);
+static void shrink_heap(min_heap* heap);
 
 
-min_heap* MIN_HEAP(int(*compare)(comparable_ptr, comparable_ptr)){
+
+
+min_heap* MIN_HEAP(
+	int(*compare)(comparable_ptr, comparable_ptr),
+	void(*deconstruct)(comparable_ptr)
+){
 	min_heap* temp;
 	temp = NEW_HEAP();
 	temp->arr = NEW_COMPTR(2);
 	temp->capacity = 2;
 	temp->length = 0;
 	temp->compare = compare;
+	temp->deconstruct = deconstruct;
 	return temp;
 }
 
+
+
+
+
+
 void del_MIN_HEAP(min_heap* heap) {
+	//if the deconstruct is not NIL, then use the deconstruct to
+	//free the memory of every element in heap->arr
+	if (heap->deconstruct != NULL)
+	{
+		for (int i = 0; i < heap->length; i++) heap->deconstruct(heap->arr[i]);
+	};
+
 	free(VOID(heap->arr));
 	free(VOID(heap));
 }
 
-void insert_heap(min_heap* heap, comparable_ptr val) {
+
+
+
+
+
+void min_heap_insert(min_heap* heap, comparable_ptr val) {
 
 	//expand the heap if it's full
 	if (heap->capacity <= heap->length) expand_heap(heap);
@@ -92,6 +97,11 @@ void insert_heap(min_heap* heap, comparable_ptr val) {
 
 	/*display(heap);*/
 }
+
+
+
+
+
 
 comparable_ptr extract_min(min_heap* heap) {
 	//
@@ -139,12 +149,19 @@ comparable_ptr extract_min(min_heap* heap) {
 	return result;
 }
 
+
+
+
+
+
+
 void decrease_key(min_heap* heap,int rank, comparable_ptr key) {
 	//if the rank is beyond range, return
 	if (rank > length(heap)) return;
 	//if the key is no less than the original, do nothing
 	if (heap->compare(heap->arr[PARENT(rank)],key)<=0) return;
 
+	if (heap->deconstruct != NULL) heap->deconstruct(heap->arr[rank - 1]);
 	heap->arr[rank - 1] = key;
 	index child = rank, parent = PARENT(rank);
 	while (parent >= 1) {
@@ -165,10 +182,45 @@ void decrease_key(min_heap* heap,int rank, comparable_ptr key) {
 	};
 }
 
+
+
+
+
+
 void display(min_heap* heap,int (*get)(comparable_ptr)) {
 	for (int i = 0; i < heap->length; i++)
 	{
 		printf("%d ", get(heap->arr[i]));
 	}
 	printf("\n");
+}
+
+
+
+
+
+
+static void expand_heap(min_heap* heap) {
+	//alloc double a space as before
+	comparable_ptr* temp;
+	temp = NEW_COMPTR(heap->capacity * 2);
+	//copy the memory into temp and delete the original heap
+	for (int i = 0; i < heap->length; i++)temp[i] = heap->arr[i];
+	free(VOID(heap->arr));
+	heap->arr = temp;
+	heap->capacity *= 2;
+}
+
+
+
+
+
+static void shrink_heap(min_heap* heap) {
+	comparable_ptr* temp;
+	temp = NEW_COMPTR(heap->capacity / 2);
+	//copy the memory into temp and delete the original heap
+	for (int i = 0; i < heap->length; i++)temp[i] = heap->arr[i];
+	free(VOID(heap->arr));
+	heap->arr = temp;
+	heap->capacity /= 2;
 }
