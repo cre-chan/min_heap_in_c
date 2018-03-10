@@ -105,6 +105,8 @@ extern "C" {
 
 	void del_MIN_HEAP(min_heap* heap);
 
+	void dump_heap(min_heap* heap);
+
 	void min_heap_insert(
 		min_heap* heap, 
 		comparable_ptr key
@@ -117,6 +119,7 @@ extern "C" {
 	);
 
 	comparable_ptr extract_min(min_heap* heap);
+
 
 #ifdef _cplusplus
 }

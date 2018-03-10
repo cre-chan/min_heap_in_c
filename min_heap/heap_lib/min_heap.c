@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "min_heap.h"
-#include "comparable.h"
 
 //MACROS alloc memory
 #define NEW_COMPTR(num) ((comparable_ptr*)malloc(sizeof(comparable_ptr)*num))
@@ -48,12 +47,8 @@ min_heap* MIN_HEAP(
 
 
 void del_MIN_HEAP(min_heap* heap) {
-	//if the deconstruct is not NIL, then use the deconstruct to
-	//free the memory of every element in heap->arr
-	if (heap->deconstruct != NULL)
-	{
-		for (int i = 0; i < heap->length; i++) heap->deconstruct(heap->arr[i]);
-	};
+
+	
 
 	free(VOID(heap->arr));
 	free(VOID(heap));
@@ -184,6 +179,16 @@ void decrease_key(min_heap* heap,int rank, comparable_ptr key) {
 
 
 
+void dump_heap(min_heap* heap) {
+	//if the deconstruct is not NIL, then use the deconstruct to
+	//free the memory of every element in heap->arr
+	if (heap->deconstruct != NULL)
+	{
+		for (int i = 0; i < heap->length; i++) 
+			heap->deconstruct(heap->arr[i]);
+	};
+
+}
 
 
 

@@ -1,10 +1,3 @@
 ﻿  comparable.c
   test.c
-test.c(10): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
-LINK : warning C4727: PCH named d:\min_heap\heap_test\release\heap_test.pch with same timestamp found in d:\min_heap\heap_test\release\test.obj and d:\min_heap\heap_test\release\comparable.obj.  Using first PCH.
-  Generating code
-  0 of 14 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  heap_test.vcxproj -> D:\min_heap\Release\heap_test.exe
+test.c(2): fatal error C1083: Cannot open include file: 'min_heap.h': No such file or directory
